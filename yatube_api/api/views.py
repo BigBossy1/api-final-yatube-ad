@@ -44,6 +44,7 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GroupSerializer
     pagination_class = None
 
+
 class FollowViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
