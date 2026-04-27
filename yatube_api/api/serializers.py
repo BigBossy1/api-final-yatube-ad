@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from django.utils import timezone
 
 from posts.models import Post, Comment, Group, Follow
 
@@ -44,10 +45,16 @@ class FollowSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(),
         slug_field='username'
     )
+    is_active = serializers.SerializerMethodField()
 
     class Meta:
         model = Follow
-        fields = ('user', 'following')
+        fields = ('user', 'following', 'start_date', 'end_date', 'is_active')
+        read_only_fields = ('start_date',)
+
+    def get_is_active(self, obj):
+        now = timezone.now()
+        return obj.end_date >= now if obj.end_date else True
 
     def validate_following(self, value):
         user = self.context['request'].user
